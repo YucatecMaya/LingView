@@ -21,7 +21,7 @@ export class Video extends React.Component {
 		$('#audio').attr('data-live', 'false');
 
 		// Activate video:
-		$('#video').css('display', 'inline');
+		$('#video').css('display', 'block'); // switched from 'inline' because it seemed unnecessary and allowed for flickering scrollbar glitch
 		$('#video').attr('data-live', 'true');
 		$('#video').attr('ontimeupdate', 'sync(this.currentTime)');
 		$('#video').attr('onclick', 'sync(this.currentTime)');
@@ -29,10 +29,12 @@ export class Video extends React.Component {
 		// Match times:
 		var audio = document.getElementById('audio');
 		var video = document.getElementById('video');
+
 		if (!audio.paused) {
 			audio.pause();
 			video.play();
 		}
+
 		video.currentTime = audio.currentTime;
 	}
 
