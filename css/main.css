@@ -84,7 +84,8 @@ td {
 		Timed */
 
 #video {
-	width: calc(100% + 1px);
+	width: 40vw; /* an attempt to avoid flickering scrollbar glitch */
+    outline: none;
 }
 
 #centerPanel {
@@ -112,7 +113,7 @@ td {
 	overflow-x: auto;
 }
 
-.timeStampContainer {
+span.timeStamp {
 	padding-top: 3px;
 	float: left;
 	/*margin-right: 9px;*/
@@ -122,12 +123,21 @@ td {
 	min-width: 46px;
 	padding-top: 8px;
 	padding-bottom: 5px;
-}
-
-a.timeStamp {
 	color: black;
 	font-weight: 700;
 	text-decoration: none;
+	cursor: pointer;
+}
+
+.searchSentence {
+	background-color: white;
+	margin: 10px;
+	padding: 5px;
+	border-width: 3px;
+	border-style: solid;
+	border-color: rgb(100, 100, 100);
+	border-radius: 5px;
+	overflow-x: auto; 
 }
 
 .labeledSentence {
@@ -303,4 +313,8 @@ video {
 	justify-content: center;
 	align-items: center;
 	height: 10em;
+}
+
+#searchForm {
+	margin: 20px;
 }
