@@ -1,5 +1,4 @@
-name: Prepare Upgrade
-description: Creates a PR to upgrade LingView core to the newest stable version available.
+name: Prepare Upgrade (Creates a PR to upgrade LingView core to the newest stable version available)
 
 env:
   upstream: BrownCLPS/LingView
@@ -46,7 +45,9 @@ jobs:
           remote_head_hash=$(git rev-parse "upstream/$UPSTREAM_BRANCH")
           echo "::set-env name=remote_head_hash::$remote_head_hash"
           git merge --no-commit --no-ff "upstream/$UPSTREAM_BRANCH"
-          git reset -- /data # revert any updates in data path
+          # revert any updates in data path
+          git reset -- data
+          git checkout -- data
         env:
           UPSTREAM: ${{ env.upstream }}
           UPSTREAM_BRANCH: ${{ env.upstream_branch }}
