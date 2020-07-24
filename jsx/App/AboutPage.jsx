@@ -4,7 +4,7 @@ export function AboutPage() {
   return (
       <div>
 
-<h2>About U koorpusil maaya t’aan <br>
+<h2>About U koorpusil maaya t’aan <br/>
 <span style="font-size: medium"><i>English</i></span></h2>
 
 
@@ -16,7 +16,7 @@ export function AboutPage() {
 
 
 
-<h2>Acerca de U koorpusil maaya t’aan <br>
+<h2>Acerca de U koorpusil maaya t’aan <br/>
 <span style="font-size: medium"><i>Español</i></span></h2>
 
 <p><b>U koorpusil maaya t’aan</b> (español: <b>El corpus del maya yucateco UNO-Brown</b>) es una colección buscable de materias audiovisuales en el maya yucateco. El <a href="https://es.wikipedia.org/wiki/Idioma_maya">maya yucateco</a> es una de las 30 lenguas de la familia maya. Cuenta con casi un millón de hablantes, primariamente en los estados mexicanos de Yucatán, Quintana Roo, y Campeche.</p>
@@ -29,7 +29,7 @@ export function AboutPage() {
 
 
 
-<h2>Yo’olal U koorpusil maaya t’aan <br>
+<h2>Yo’olal U koorpusil maaya t’aan <br/>
 <span style="font-size: medium"><i>Maaya t’aan</i></span></h2>
 
 <p><b>U koorpusil maaya t’aane’</b> (ich espanyoole’: <b>El corpus de maya yucateco UNO-Brown</b>) jump’éel múuch’ aawdyo yéetel bideeo ich maaya t’aan. <a href="https://es.wikipedia.org/wiki/Idioma_maya">Maaya t’aane’</a> jump’éel t’aan ich 30 u p’éelal t’aano’ob u láak’ubáaob. Yaan kex óol jump’éel miyon máak t’anik, yéetel maases kajakbalo’ob tu estaadoil Yukataan, Kintaana Rooj yéetel Káampech.</p>
