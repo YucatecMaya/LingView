@@ -15,7 +15,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: octokit/request-action@v2.0.0
-      continue-on-error: true
       with:
         route: GET /repos/:repository/collaborators/${{ github.actor }}
         repository: ${{ github.repository }}
@@ -50,6 +49,9 @@ jobs:
     needs: [check-actor, check-repo, check-comment]
     if: needs.check-repo.outputs.is-core == 'false' && needs.check-comment.outputs.triggered == 'true'
     runs-on: ubuntu-latest
+    env:
+      actor: ${{ github.actor }}
+      actoremail: ${{ github.actor }}@users.noreply.github.com
     steps:
       - name: Check out master
         uses: actions/checkout@v2
@@ -57,7 +59,8 @@ jobs:
           ref: temp-master
       - name: Merge upstream into master
         run: |
-          echo $actorresult
+          git config user.email "$actoremail"
+          git config user.name "$actor"
           git remote add upstream "https://github.com/$UPSTREAM.git"
           git fetch upstream
           remote_head_hash=$(git rev-parse "upstream/$UPSTREAM_BRANCH")
@@ -69,13 +72,12 @@ jobs:
         env:
           UPSTREAM: ${{ env.upstream }}
           UPSTREAM_BRANCH: ${{ env.upstream_branch }}
-          actorresult: ${{ needs.check-actor.outcome }} 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v2
         with:
           commit-message: Upgrade LingView core version
           committer: GitHub <noreply@github.com>
-          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+          author: ${{ env.actor }} <${{ env.actoremail }}>
           title: 'Upgrade LingView Core'
           body: |
             Pull request to upgrade LingView version to master (${{ env.remote_head_hash }}) is ready to review and merge! Automatically ignored any changes made to the `data/` folder. 
