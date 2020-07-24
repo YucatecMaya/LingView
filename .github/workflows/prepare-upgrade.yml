@@ -19,8 +19,6 @@ jobs:
       - run: echo "Checking if repository is the upstream repository..."
   check-comment:
     runs-on: ubuntu-latest
-    outputs:
-      triggered: ${{ steps.check.outputs.triggered }}
     steps:
       - uses: khan/pull-request-comment-trigger@master
         id: check
@@ -31,7 +29,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   upgrade:
     needs: [check-repo, check-comment]
-    if: needs.check-repo.outputs.is-core == 'false' && needs.check-comment.outputs.triggered == 'true'
+    if: needs.check-repo.outputs.is-core == 'false' && needs.check-comment.steps.check.outputs.triggered == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Check out master
