@@ -11,30 +11,44 @@ on:
     types: [created]
 
 jobs:
+  check-actor:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: octokit/request-action@v2.0.0
+      continue-on-error: true
+      with:
+        route: GET /repos/:repository/collaborators/${{ github.actor }}
+        repository: ${{ github.repository }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   check-repo:
     runs-on: ubuntu-latest
     outputs:
       is-core: ${{ github.repository == env.upstream }}
     steps:
-      - run: 'echo "Checking if repository is the upstream repository... $answer"'
+      - name: Log result
+        run: 'echo "Checking if repository is the upstream repository... $answer"'
         env:
           answer: ${{ github.repository == env.upstream }}
   check-comment:
     runs-on: ubuntu-latest
+    outputs:
+      triggered: ${{ steps.check.outputs.triggered }}
     steps:
       - uses: khan/pull-request-comment-trigger@master
         id: check
         with:
-          trigger: '@upgrade'
+          trigger: '#upgrade'
           reaction: hooray
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: 'echo "Is triggered?: $triggered"'
+      - name: Log result
+        run: 'echo "Is triggered?: $triggered"'
         env:
           triggered: ${{ steps.check.outputs.triggered }}
   upgrade:
-    needs: [check-repo, check-comment]
-    if: needs.check-repo.outputs.is-core == 'false' && needs.check-comment.steps.check.outputs.triggered == 'true'
+    needs: [check-actor, check-repo, check-comment]
+    if: needs.check-repo.outputs.is-core == 'false' && needs.check-comment.outputs.triggered == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Check out master
@@ -43,6 +57,7 @@ jobs:
           ref: temp-master
       - name: Merge upstream into master
         run: |
+          echo $actorresult
           git remote add upstream "https://github.com/$UPSTREAM.git"
           git fetch upstream
           remote_head_hash=$(git rev-parse "upstream/$UPSTREAM_BRANCH")
@@ -54,6 +69,7 @@ jobs:
         env:
           UPSTREAM: ${{ env.upstream }}
           UPSTREAM_BRANCH: ${{ env.upstream_branch }}
+          actorresult: ${{ needs.check-actor.outcome }} 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v2
         with:
