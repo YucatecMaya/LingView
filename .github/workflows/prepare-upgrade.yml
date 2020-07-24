@@ -16,7 +16,9 @@ jobs:
     outputs:
       is-core: ${{ github.repository == env.upstream }}
     steps:
-      - run: echo "Checking if repository is the upstream repository..."
+      - run: 'echo "Checking if repository is the upstream repository... $answer"'
+        env:
+          answer: ${{ github.repository == env.upstream }}
   check-comment:
     runs-on: ubuntu-latest
     steps:
@@ -27,6 +29,9 @@ jobs:
           reaction: hooray
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: 'echo "Is triggered?: $triggered"'
+        env:
+          triggered: ${{ steps.check.outputs.triggered }}
   upgrade:
     needs: [check-repo, check-comment]
     if: needs.check-repo.outputs.is-core == 'false' && needs.check-comment.steps.check.outputs.triggered == 'true'
