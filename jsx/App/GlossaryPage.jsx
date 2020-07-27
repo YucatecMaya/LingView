@@ -85,104 +85,72 @@ export function GlossaryPage() {
     			<td>k</td>
   			</tr>
     		<tr>
-    			<td></td>
-    			<td></td>
+    			<td>[k’]</td>
+    			<td>k'</td>
   			</tr>
    			<tr>
-    			<td></td>
-    			<td></td>
+    			<td>[l]</td>
+    			<td>l</td>
   			</tr>
   			<tr>
-    			<td></td>
-    			<td></td>
+    			<td>[m]</td>
+    			<td>m</td>
   			</tr>
     		<tr>
-    			<td></td>
-    			<td></td>
+    			<td>[n]</td>
+    			<td>n</td>
   			</tr>
    			<tr>
-    			<td></td>
-    			<td></td>
+    			<td>[o]</td>
+    			<td>o</td>
   			</tr>
   			<tr>
-    			<td></td>
-    			<td></td>
+    			<td>[p]</td>
+    			<td>p</td>
   			</tr>
     		<tr>
-    			<td></td>
-    			<td></td>
+    			<td>[p’]</td>
+    			<td>p'</td>
   			</tr>
    			<tr>
-    			<td></td>
-    			<td></td>
+    			<td>[r]</td>
+    			<td>r</td>
   			</tr>
   			<tr>
-    			<td></td>
-    			<td></td>
+    			<td>[s]</td>
+    			<td>s</td>
   			</tr>
     		<tr>
-    			<td></td>
-    			<td></td>
+    			<td>[t]</td>
+    			<td>t</td>
   			</tr>
    			<tr>
-    			<td></td>
-    			<td></td>
+    			<td>[t’]</td>
+    			<td>t'</td>
   			</tr>
   			<tr>
-    			<td></td>
-    			<td></td>
+    			<td>[ts]</td>
+    			<td>ts</td>
   			</tr>
     		<tr>
-    			<td></td>
-    			<td></td>
+    			<td>[ts’]</td>
+    			<td>ts'</td>
   			</tr>
   			<tr>
-    			<td></td>
-    			<td></td>
+    			<td>[u]</td>
+    			<td>u</td>
   			</tr>
   			<tr>
-    			<td></td>
-    			<td></td>
+    			<td>[w]</td>
+    			<td>w</td>
   			</tr>
     		<tr>
-    			<td></td>
-    			<td></td>
+    			<td>[x]</td>
+    			<td>x</td>
   			</tr>
   			<tr>
-    			<td></td>
-    			<td></td>
-  			</tr>
-  			<tr>
-    			<td></td>
-    			<td></td>
-  			</tr>
-    		<tr>
-    			<td></td>
-    			<td></td>
-  			</tr>
-  			<tr>
-    			<td></td>
-    			<td></td>
-  			</tr>
-  			<tr>
-    			<td></td>
-    			<td></td>
-  			</tr>
-    		<tr>
-    			<td></td>
-    			<td></td>
-  			</tr>
-  			<tr>
-    			<td></td>
-    			<td></td>
-  			</tr>
-  			<tr>
-    			<td></td>
-    			<td></td>
-  			</tr>
-    		<tr>
-    			<td></td>
-    			<td></td>
+    			<td>[y]</td>
+    			<td>y</td>
   			</tr>
 		</table>
 		<p>En el caso de las vocales se consideraron las siguientes formas:</p>
