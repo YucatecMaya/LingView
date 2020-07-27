@@ -34,7 +34,7 @@ export function GlossaryPage() {
     			<td>a desinfectar todas antes de...</td>
   			</tr>
 		</table>
-		<p>Para cada sonido del habla se usó en la escritura la misma letra o conjunto de letras (grafías), salvo en algunos casos en la que se transcribe siguiendo el español estándar (por ejemplo:NN ). Se usaron las siguientes grafías en las transcripciones realizadas en el proyecto:</p>
+		<p>Para cada sonido del habla se usó en la escritura la misma letra o conjunto de letras (grafías), salvo en algunos casos en la que se transcribe siguiendo el español estándar (por ejemplo, NN). Se usaron las siguientes grafías en las transcripciones realizadas en el proyecto:</p>
 		<table>
   			<tr>
     			<th>fonema</th>
@@ -49,64 +49,40 @@ export function GlossaryPage() {
     			<td>b</td>
   			</tr>
     		<tr>
-    			<td></td>
-    			<td></td>
+    			<td>[ʧ]</td>
+    			<td>ch</td>
   			</tr>
    			<tr>
-    			<td></td>
+    			<td>[ʧʼ]</td>
     			<td></td>
   			</tr>
   			<tr>
-    			<td></td>
-    			<td></td>
+    			<td>[d]</td>
+    			<td>d</td>
   			</tr>
     		<tr>
-    			<td></td>
-    			<td></td>
+    			<td>[e]</td>
+    			<td>e</td>
   			</tr>
   			<tr>
-    			<td></td>
-    			<td></td>
+    			<td>[f]</td>
+    			<td>f</td>
   			</tr>
   			<tr>
-    			<td></td>
-    			<td></td>
+    			<td>[g]</td>
+    			<td>g</td>
   			</tr>
     		<tr>
-    			<td></td>
-    			<td></td>
+    			<td>[i]</td>
+    			<td>i</td>
   			</tr>
    			<tr>
-    			<td></td>
-    			<td></td>
+    			<td>[h]</td>
+    			<td>j</td>
   			</tr>
   			<tr>
-    			<td></td>
-    			<td></td>
-  			</tr>
-    		<tr>
-    			<td></td>
-    			<td></td>
-  			</tr>
-   			<tr>
-    			<td></td>
-    			<td></td>
-  			</tr>
-  			<tr>
-    			<td></td>
-    			<td></td>
-  			</tr>
-    		<tr>
-    			<td></td>
-    			<td></td>
-  			</tr>
-   			<tr>
-    			<td></td>
-    			<td></td>
-  			</tr>
-  			<tr>
-    			<td></td>
-    			<td></td>
+    			<td>[k]</td>
+    			<td>k</td>
   			</tr>
     		<tr>
     			<td></td>
@@ -136,7 +112,19 @@ export function GlossaryPage() {
     			<td></td>
     			<td></td>
   			</tr>
+   			<tr>
+    			<td></td>
+    			<td></td>
+  			</tr>
   			<tr>
+    			<td></td>
+    			<td></td>
+  			</tr>
+    		<tr>
+    			<td></td>
+    			<td></td>
+  			</tr>
+   			<tr>
     			<td></td>
     			<td></td>
   			</tr>
@@ -183,6 +171,85 @@ export function GlossaryPage() {
     		<tr>
     			<td></td>
     			<td></td>
+  			</tr>
+  			<tr>
+    			<td></td>
+    			<td></td>
+  			</tr>
+  			<tr>
+    			<td></td>
+    			<td></td>
+  			</tr>
+    		<tr>
+    			<td></td>
+    			<td></td>
+  			</tr>
+		</table>
+		<p>En el caso de las vocales se consideraron las siguientes formas:</p>
+		<table>
+  			<tr>
+    			<th>corta</th>
+    			<th>larga</th>
+    			<th>alta</th>
+    			<th>rearticulada</th>
+    			<th>glotalizada</th>
+  			</tr>
+  			<tr>
+    			<td>a</td>
+    			<td>aa</td>
+    			<td>áa</td>
+    			<td>a'a</td>
+    			<td>a'</td>
+  			</tr>
+  			<tr>
+    			<td>e</td>
+    			<td>ee</td>
+    			<td>ée</td>
+    			<td>e'e</td>
+    			<td>e'</td>
+  			</tr>
+  			<tr>
+    			<td>i</td>
+    			<td>ii</td>
+    			<td>íi</td>
+    			<td>i'i</td>
+    			<td>i'</td>
+  			</tr>
+  			<tr>
+    			<td>o</td>
+    			<td>oo</td>
+    			<td>óo</td>
+    			<td>o'o</td>
+    			<td>o'</td>
+  			</tr>
+  			<tr>
+    			<td>u</td>
+    			<td>uu</td>
+    			<td>úu</td>
+    			<td>u'u</td>
+    			<td>u'</td>
+  			</tr>
+  		</table>
+  		<p>Los antropónimos se transcribieron usando la ortografía oficial en español. Por ejemplo:</p>
+		<table>
+  			<tr>
+    			<td>transcripción</td>
+    			<td><i>in kaaba’e’ Martín</i></td>
+  			</tr>
+    		<tr>
+    			<td>traducción</td>
+    			<td>mi nombre es Martín</td>
+  			</tr>
+		</table>
+  		<p>Los topónimos se transcribieron a partir de la ortografía del maya y de acuerdo a su fonología. Por ejemplo:</p>
+  		<table>
+  			<tr>
+    			<td>transcripción</td>
+    			<td><i>in kaajale’ Póopla’</i></td>
+  			</tr>
+    		<tr>
+    			<td>traducción</td>
+    			<td>mi pueblo es Popolá</td>
   			</tr>
 		</table>
       </div>
