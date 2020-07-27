@@ -36,248 +36,68 @@ export function GlossaryPage() {
 		</table>
 		<p>Para cada sonido del habla se usó en la escritura la misma letra o conjunto de letras (grafías), salvo en algunos casos en la que se transcribe siguiendo el español estándar (por ejemplo, NN). Se usaron las siguientes grafías en las transcripciones realizadas en el proyecto:</p>
 		<table>
-		<tr>
-		<td>
-		<table>
   			<tr>
-    			<th>fonema</th>
-    			<th>grafía</th>
-  			</tr>
-  			<tr>
+    			<td><b>fonema</b></td>
     			<td>[a]</td>
-    			<td>a</td>
-  			</tr>
-  			<tr>
     			<td>[b]</td>
-    			<td>b</td>
-  			</tr>
-    		<tr>
     			<td>[ʧ]</td>
-    			<td>ch</td>
-  			</tr>
-   			<tr>
     			<td>[ʧʼ]</td>
-    			<td>ch’</td>
-  			</tr>
-  			<tr>
     			<td>[d]</td>
-    			<td>d</td>
-  			</tr>
-    		<tr>
     			<td>[e]</td>
-    			<td>e</td>
-  			</tr>
-  			<tr>
     			<td>[f]</td>
-    			<td>f</td>
-  			</tr>
-  			<tr>
     			<td>[g]</td>
-    			<td>g</td>
-  			</tr>
-    		<tr>
     			<td>[i]</td>
-    			<td>i</td>
-  			</tr>
-   			<tr>
     			<td>[h]</td>
-    			<td>j</td>
-  			</tr>
-  			<tr>
     			<td>[k]</td>
-    			<td>k</td>
-  			</tr>
-    		<tr>
     			<td>[k’]</td>
-    			<td>k’</td>
-  			</tr>
-   			<tr>
     			<td>[l]</td>
-    			<td>l</td>
-  			</tr>
-  			<tr>
     			<td>[m]</td>
-    			<td>m</td>
-  			</tr>
-    		<tr>
     			<td>[n]</td>
-    			<td>n</td>
-  			</tr>
-   			<tr>
     			<td>[o]</td>
-    			<td>o</td>
-  			</tr>
-  			<tr>
     			<td>[p]</td>
-    			<td>p</td>
-  			</tr>
-    		<tr>
     			<td>[p’]</td>
-    			<td>p’</td>
-  			</tr>
-   			<tr>
     			<td>[r]</td>
-    			<td>r</td>
-  			</tr>
-  			<tr>
     			<td>[s]</td>
-    			<td>s</td>
-  			</tr>
-    		<tr>
     			<td>[t]</td>
-    			<td>t</td>
-  			</tr>
-   			<tr>
     			<td>[t’]</td>
-    			<td>t’</td>
-  			</tr>
-  			<tr>
     			<td>[ts]</td>
-    			<td>ts</td>
-  			</tr>
-    		<tr>
-    			<td>[ts’]</td>
-    			<td>ts’</td>
-  			</tr>
-  			<tr>
-    			<td>[u]</td>
-    			<td>u</td>
+				<td>[ts’]</td>
+				<td>[u]</td>
+				<td>[w]</td>
+				<td>[x]</td>
+				<td>[y]</td>
   			</tr>
   			<tr>
-    			<td>[w]</td>
-    			<td>w</td>
-  			</tr>
-    		<tr>
-    			<td>[x]</td>
-    			<td>x</td>
-  			</tr>
-  			<tr>
-    			<td>[y]</td>
-    			<td>y</td>
-  			</tr>
-		</table>
-		</td>
-		<td>
-		<table>
-  			<tr>
-    			<th>fonema</th>
-    			<th>grafía</th>
-  			</tr>
-  			<tr>
-    			<td>[a]</td>
+  			    <td><b>grafía</b></td>
     			<td>a</td>
-  			</tr>
-  			<tr>
-    			<td>[b]</td>
     			<td>b</td>
-  			</tr>
-    		<tr>
-    			<td>[ʧ]</td>
     			<td>ch</td>
-  			</tr>
-   			<tr>
-    			<td>[ʧʼ]</td>
     			<td>ch’</td>
-  			</tr>
-  			<tr>
-    			<td>[d]</td>
     			<td>d</td>
-  			</tr>
-    		<tr>
-    			<td>[e]</td>
     			<td>e</td>
-  			</tr>
-  			<tr>
-    			<td>[f]</td>
     			<td>f</td>
-  			</tr>
-  			<tr>
-    			<td>[g]</td>
     			<td>g</td>
-  			</tr>
-    		<tr>
-    			<td>[i]</td>
     			<td>i</td>
-  			</tr>
-   			<tr>
-    			<td>[h]</td>
     			<td>j</td>
-  			</tr>
-  			<tr>
-    			<td>[k]</td>
     			<td>k</td>
-  			</tr>
-    		<tr>
-    			<td>[k’]</td>
-    			<td>k’</td>
-  			</tr>
-   			<tr>
-    			<td>[l]</td>
-    			<td>l</td>
-  			</tr>
-  			<tr>
-    			<td>[m]</td>
-    			<td>m</td>
-  			</tr>
-    		<tr>
-    			<td>[n]</td>
-    			<td>n</td>
-  			</tr>
-   			<tr>
-    			<td>[o]</td>
-    			<td>o</td>
-  			</tr>
-  			<tr>
-    			<td>[p]</td>
-    			<td>p</td>
-  			</tr>
-    		<tr>
-    			<td>[p’]</td>
-    			<td>p’</td>
-  			</tr>
-   			<tr>
-    			<td>[r]</td>
-    			<td>r</td>
-  			</tr>
-  			<tr>
-    			<td>[s]</td>
-    			<td>s</td>
-  			</tr>
-    		<tr>
-    			<td>[t]</td>
-    			<td>t</td>
-  			</tr>
-   			<tr>
-    			<td>[t’]</td>
-    			<td>t’</td>
-  			</tr>
-  			<tr>
-    			<td>[ts]</td>
-    			<td>ts</td>
-  			</tr>
-    		<tr>
-    			<td>[ts’]</td>
-    			<td>ts’</td>
-  			</tr>
-  			<tr>
-    			<td>[u]</td>
-    			<td>u</td>
-  			</tr>
-  			<tr>
-    			<td>[w]</td>
-    			<td>w</td>
-  			</tr>
-    		<tr>
-    			<td>[x]</td>
-    			<td>x</td>
-  			</tr>
-  			<tr>
-    			<td>[y]</td>
-    			<td>y</td>
-  			</tr>
-		</table>
-		</td>
-		</tr>
+				<td>k’</td>
+				<td>l</td>
+				<td>m</td>
+				<td>n</td>
+				<td>o</td>
+				<td>p</td>
+				<td>p’</td>
+				<td>r</td>
+				<td>s</td>
+				<td>t</td>
+				<td>t’</td>
+				<td>ts</td>
+				<td>ts’</td>
+				<td>u</td>
+				<td>w</td>
+				<td>x</td>
+				<td>y</td>
+			</tr>
 		</table>
 		<p>En el caso de las vocales se consideraron las siguientes formas:</p>
 		<table>
