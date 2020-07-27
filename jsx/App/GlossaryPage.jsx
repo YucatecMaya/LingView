@@ -102,45 +102,44 @@ export function GlossaryPage() {
 		<p>En el caso de las vocales se consideraron las siguientes formas:</p>
 		<table>
   			<tr>
-    			<th>corta</th>
-    			<th>larga</th>
-    			<th>alta</th>
-    			<th>rearticulada</th>
-    			<th>glotalizada</th>
-  			</tr>
-  			<tr>
+  				<td><b>corta</b></td>
     			<td>a</td>
-    			<td>aa</td>
-    			<td>áa</td>
-    			<td>a’a</td>
-    			<td>a’</td>
-  			</tr>
-  			<tr>
     			<td>e</td>
-    			<td>ee</td>
-    			<td>ée</td>
-    			<td>e’e</td>
-    			<td>e’</td>
-  			</tr>
-  			<tr>
     			<td>i</td>
-    			<td>ii</td>
-    			<td>íi</td>
-    			<td>i’i</td>
-    			<td>i’</td>
-  			</tr>
-  			<tr>
     			<td>o</td>
-    			<td>oo</td>
-    			<td>óo</td>
-    			<td>o’o</td>
-    			<td>o’</td>
+    			<td>u</td>
   			</tr>
   			<tr>
-    			<td>u</td>
+  				<td><b>larga</b></td>
+    			<td>aa</td>
+    			<td>ee</td>
+    			<td>ii</td>
+    			<td>oo</td>
     			<td>uu</td>
+  			</tr>
+  			<tr>
+  				<td><b>alta</b></td>
+  				<td>áa</td>
+    			<td>ée</td>
+    			<td>íi</td>
+    			<td>óo</td>
     			<td>úu</td>
+  			</tr>
+  			<tr>
+  				<td><b>rearticulada</b></td>
+  				<td>a’a</td>
+    			<td>e’e</td>
+    			<td>i’i</td>
+    			<td>o’o</td>
     			<td>u’u</td>
+    			
+  			</tr>
+  			<tr>
+  				<td><b>glotalizada</b></td>
+  				<td>a’</td>
+    			<td>e’</td>
+    			<td>i’</td>
+    			<td>o’</td>
     			<td>u’</td>
   			</tr>
   		</table>
