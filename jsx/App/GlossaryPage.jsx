@@ -19,7 +19,7 @@ export function GlossaryPage() {
     			<td>está grande la payla, pues más de un kilo de chile</td>
   			</tr>
 		</table>
-		<p>Ambas transcripciones se realizaron con un alfabeto práctico que diera cuenta de todos los fonemas del maya yucateco actual, por esta razón se contemplaron los grafemas “d”, “g”, y “f”, para los fonemas [d], [g], y [f], respectivamente. Estos fonemas se encuentran en palabras prestadas de otras lenguas, pero que ya están totalmente integradas en el maya. Por ejemplo:</p>
+		<p>Ambas transcripciones se realizaron con un alfabeto práctico que diera cuenta de todos los fonemas del maya yucateco actual, por esta razón se contemplaron los grafemas <i>d</i>, <i>g</i>, y <i>f</i>, para los fonemas [d], [g], y [f], respectivamente. Estos fonemas se encuentran en palabras prestadas de otras lenguas, pero que ya están totalmente integradas en el maya. Por ejemplo:</p>
 		<table>
   			<tr>
     			<td><b>transcripción superficial</b></td>
@@ -69,78 +69,77 @@ export function GlossaryPage() {
   			</tr>
   			<tr>
   			    <td><b>grafía</b></td>
-    			<td>a</td>
-    			<td>b</td>
-    			<td>ch</td>
-    			<td>ch’</td>
-    			<td>d</td>
-    			<td>e</td>
-    			<td>f</td>
-    			<td>g</td>
-    			<td>i</td>
-    			<td>j</td>
-    			<td>k</td>
-				<td>k’</td>
-				<td>l</td>
-				<td>m</td>
-				<td>n</td>
-				<td>o</td>
-				<td>p</td>
-				<td>p’</td>
-				<td>r</td>
-				<td>s</td>
-				<td>t</td>
-				<td>t’</td>
-				<td>ts</td>
-				<td>ts’</td>
-				<td>u</td>
-				<td>w</td>
-				<td>x</td>
-				<td>y</td>
+    			<td><i>a</i></td>
+    			<td><i>b</i></td>
+    			<td><i>ch</i></td>
+    			<td><i>ch’</i></td>
+    			<td><i>d</i></td>
+    			<td><i>e</i></td>
+    			<td><i>f</i></td>
+    			<td><i>g</i></td>
+    			<td><i>i</i></td>
+    			<td><i>j</i></td>
+    			<td><i>k</i></td>
+				<td><i>k’</i></td>
+				<td><i>l</i></td>
+				<td><i>m</i></td>
+				<td><i>n</i></td>
+				<td><i>o</i></td>
+				<td><i>p</i></td>
+				<td><i>p’</i></td>
+				<td><i>r</i></td>
+				<td><i>s</i></td>
+				<td><i>t</i></td>
+				<td><i>t’</i></td>
+				<td><i>ts</i></td>
+				<td><i>ts’</i></td>
+				<td><i>u</i></td>
+				<td><i>w</i></td>
+				<td><i>x</i></td>
+				<td><i>y</i></td>
 			</tr>
 		</table>
 		<p>En el caso de las vocales se consideraron las siguientes formas:</p>
 		<table>
   			<tr>
   				<td><b>corta</b></td>
-    			<td>a</td>
-    			<td>e</td>
-    			<td>i</td>
-    			<td>o</td>
-    			<td>u</td>
+    			<td><i>a</i></td>
+    			<td><i>e</i></td>
+    			<td><i>i</i></td>
+    			<td><i>o</i></td>
+    			<td><i>u</i></td>
   			</tr>
   			<tr>
   				<td><b>larga</b></td>
-    			<td>aa</td>
-    			<td>ee</td>
-    			<td>ii</td>
-    			<td>oo</td>
-    			<td>uu</td>
+    			<td><i>aa</i></td>
+    			<td><i>ee</i></td>
+    			<td><i>ii</i></td>
+    			<td><i>oo</i></td>
+    			<td><i>uu</i></td>
   			</tr>
   			<tr>
   				<td><b>alta</b></td>
-  				<td>áa</td>
-    			<td>ée</td>
-    			<td>íi</td>
-    			<td>óo</td>
-    			<td>úu</td>
+  				<td><i>áa</i></td>
+    			<td><i>ée</i></td>
+    			<td><i>íi</i></td>
+    			<td><i>óo</i></td>
+    			<td><i>úu<</i>/td>
   			</tr>
   			<tr>
   				<td><b>rearticulada</b></td>
-  				<td>a’a</td>
-    			<td>e’e</td>
-    			<td>i’i</td>
-    			<td>o’o</td>
-    			<td>u’u</td>
-    			
+  				<td><i>a’a</i></td>
+    			<td><i>e’e</i></td>
+    			<td><i>i’i</i></td>
+    			<td><i>o’o</i></td>
+    			<td><i>u’u</i></td>
   			</tr>
   			<tr>
   				<td><b>glotalizada</b></td>
-  				<td>a’</td>
-    			<td>e’</td>
-    			<td>i’</td>
-    			<td>o’</td>
-    			<td>u’</td>
+  				<td><i>a’</i></td>
+    			<td><i>e’</i></td>
+    			<td><i>i’</i></td>
+    			<td><i>o’</i></td>
+    			<td><i>u’</i></td>
   			</tr>
   		</table>
   		<p>Los antropónimos se transcribieron usando la ortografía oficial en español. Por ejemplo:</p>
