@@ -8,7 +8,7 @@ export function GlossaryPage() {
 		<table>
   			<tr>
     			<td>transcripción superficial</td>
-    			<td><i>nojchu paylaile', pos maanlup'ée kiilo yiiki</i></td>
+    			<td><i>nojchu paylaile’, pos maanlup’ée kiilo yiiki</i></td>
   			</tr>
   			<tr>
     			<td>transcripción profunda</td>
@@ -54,7 +54,7 @@ export function GlossaryPage() {
   			</tr>
    			<tr>
     			<td>[ʧʼ]</td>
-    			<td></td>
+    			<td>ch’</td>
   			</tr>
   			<tr>
     			<td>[d]</td>
@@ -86,7 +86,7 @@ export function GlossaryPage() {
   			</tr>
     		<tr>
     			<td>[k’]</td>
-    			<td>k'</td>
+    			<td>k’</td>
   			</tr>
    			<tr>
     			<td>[l]</td>
@@ -110,7 +110,7 @@ export function GlossaryPage() {
   			</tr>
     		<tr>
     			<td>[p’]</td>
-    			<td>p'</td>
+    			<td>p’</td>
   			</tr>
    			<tr>
     			<td>[r]</td>
@@ -126,7 +126,7 @@ export function GlossaryPage() {
   			</tr>
    			<tr>
     			<td>[t’]</td>
-    			<td>t'</td>
+    			<td>t’</td>
   			</tr>
   			<tr>
     			<td>[ts]</td>
@@ -134,7 +134,7 @@ export function GlossaryPage() {
   			</tr>
     		<tr>
     			<td>[ts’]</td>
-    			<td>ts'</td>
+    			<td>ts’</td>
   			</tr>
   			<tr>
     			<td>[u]</td>
@@ -166,36 +166,36 @@ export function GlossaryPage() {
     			<td>a</td>
     			<td>aa</td>
     			<td>áa</td>
-    			<td>a'a</td>
-    			<td>a'</td>
+    			<td>a’a</td>
+    			<td>a’</td>
   			</tr>
   			<tr>
     			<td>e</td>
     			<td>ee</td>
     			<td>ée</td>
-    			<td>e'e</td>
-    			<td>e'</td>
+    			<td>e’e</td>
+    			<td>e’</td>
   			</tr>
   			<tr>
     			<td>i</td>
     			<td>ii</td>
     			<td>íi</td>
-    			<td>i'i</td>
-    			<td>i'</td>
+    			<td>i’i</td>
+    			<td>i’</td>
   			</tr>
   			<tr>
     			<td>o</td>
     			<td>oo</td>
     			<td>óo</td>
-    			<td>o'o</td>
-    			<td>o'</td>
+    			<td>o’o</td>
+    			<td>o’</td>
   			</tr>
   			<tr>
     			<td>u</td>
     			<td>uu</td>
     			<td>úu</td>
-    			<td>u'u</td>
-    			<td>u'</td>
+    			<td>u’u</td>
+    			<td>u’</td>
   			</tr>
   		</table>
   		<p>Los antropónimos se transcribieron usando la ortografía oficial en español. Por ejemplo:</p>
