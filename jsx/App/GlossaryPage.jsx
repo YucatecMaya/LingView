@@ -123,7 +123,7 @@ export function GlossaryPage() {
     			<td><i>ée</i></td>
     			<td><i>íi</i></td>
     			<td><i>óo</i></td>
-    			<td><i>úu</i>/td>
+    			<td><i>úu</i></td>
   			</tr>
   			<tr>
   				<td><b>rearticulada</b></td>
