@@ -2,7 +2,7 @@ import React from 'react';
 
 export function GlossaryPage() {
   return (
-      <div style={{margin: "0.5in"}}>
+      <div style={{margin: "0.25in"}}>
 		<h2>De la transcripción</h2>
 		<p>Al inicio del proyecto se decidió hacer dos tipos de transcripción: una cercana al habla de los entrevistados (transcripción superficial) y otra que diera cuenta de las raíces y demás morfemas de la lengua (transcripción profunda). Esta decisión se tomó ya que cada una presenta ventajas y desventajas para distintos usuarios. Una transcripción más cercana al habla del entrevistado permite apreciar diversos procesos tales como: las elisiones, contracciones, asimilaciones, entre otras. Varios de estos fenómenos dan lugar a formas que no serían reconocibles para los no expertos. En cuanto a la transcripción profunda, ésta tiene la ventaja de representar morfemas fáciles de reconocer, y de encontrar en otras obras de referencia, como los diccionarios. Además, es posible a partir de ésta llevar a cabo otras tareas lingüísticas, como el corte morfológico y el glosado. Pero tiene la desventaja de no coincidir con el habla de los entrevistados. Veamos los siguientes ejemplos:</p>
 		<table>
@@ -39,7 +39,7 @@ export function GlossaryPage() {
   			<tr>
     			<td><b>fonema</b></td>
     			<td>[a]</td>
-    			<td>[b]</td>
+    			<td>[ɓ]</td>
     			<td>[ʧ]</td>
     			<td>[ʧʼ]</td>
     			<td>[d]</td>
@@ -60,8 +60,8 @@ export function GlossaryPage() {
     			<td>[s]</td>
     			<td>[t]</td>
     			<td>[t’]</td>
-    			<td>[ts]</td>
-				<td>[ts’]</td>
+    			<td>[ʦ]</td>
+				<td>[ʦ’]</td>
 				<td>[u]</td>
 				<td>[w]</td>
 				<td>[ʃ]</td>
