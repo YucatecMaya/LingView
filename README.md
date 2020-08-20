@@ -12,9 +12,7 @@ To begin using this site, you'll need to have NPM and Node.js installed. [Detail
     
 This will install all the node modules required by our program. After making changes to a file, you'll need to bundle the code with [Webpack](https://webpack.js.org/). To do so, simply type the command "webpack" in the repository's root directory.
 
-~~**WARNING: Current offline version not compatible with Chrome. See here:  https://stackoverflow.com/questions/20904098/react-js-example-in-tutorial-not-working**~~
-
-To view the website in Chrome:
+To view the website in Chrome or any other browser:
 1. Run `webpack`.
 2. Open `index.html`.
 
