@@ -48,8 +48,9 @@ jobs:
           git fetch upstream
           remote_head_hash=$(git rev-parse "upstream/$upstream_branch")
           echo "::set-env name=remote_head_hash::$remote_head_hash"
-          git merge --no-commit --no-ff -Xtheirs "upstream/$upstream_branch"
-          # revert any updates in data path
+          git merge --no-commit --no-ff -Xtheirs "upstream/$upstream_branch" || echo "There are unresolved merge conflicts. Make sure you resolve them before merging the pull request."
+          # revert any updates in data path and build path
+          git reset -- build
           git reset -- data
           git checkout -- data
           # If merging fails, perform the merge on your local machine with this sequence of commands:
