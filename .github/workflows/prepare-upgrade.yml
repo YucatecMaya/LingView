@@ -48,11 +48,17 @@ jobs:
           git fetch upstream
           remote_head_hash=$(git rev-parse "upstream/$upstream_branch")
           echo "::set-env name=remote_head_hash::$remote_head_hash"
-          git merge --no-commit --no-ff --strategy-option=theirs "upstream/$upstream_branch"
-          git add -A
+          git merge --no-commit --no-ff -Xtheirs "upstream/$upstream_branch"
           # revert any updates in data path
           git reset -- data
           git checkout -- data
+          # If merging fails, perform the merge on your local machine with this sequence of commands:
+          # [if you've never done it before] git remote add upstream "https://github.com/BrownCLPS/LingView.git"
+          # git pull
+          # git fetch upstream
+          # git merge --no-ff -Xtheirs upstream/master
+          # git reset -- data
+          # git checkout -- data
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v2
         with:
