@@ -53,6 +53,10 @@ jobs:
           git reset -- build
           git reset -- data
           git checkout -- data
+          # GitHub Actions are not allowed to create or modify workflows, so discard any workflow changes and warn about them.
+          test $(git status | grep -c workflows) -lt 1 || echo "There were workflow changes, which can't be included in the automated PR. You will need to manually update your files in .github/workflows/ to match the BrownCLPS/LingView version."
+          git reset -- .github/workflows
+          git checkout -- .github/workflows
           # If merging fails, perform the merge on your local machine with this sequence of commands:
           # [if you've never done it before] git remote add upstream "https://github.com/BrownCLPS/LingView.git"
           # git pull
