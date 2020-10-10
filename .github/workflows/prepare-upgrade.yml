@@ -53,17 +53,10 @@ jobs:
           git reset -- build # build is gitignored, but sometimes changes to build cause merge conflicts anyway *shrug*
           git reset -- data
           git checkout -- data
-          # GitHub Actions are not allowed to create or modify workflows, so discard any workflow changes and warn about them.
+          # discard any workflow changes and warn about them
           test $(git status | grep -c workflows) -lt 1 || echo "There were workflow changes, which can't be included in the automated PR. You will need to manually update your files in .github/workflows/ to match the $upstream version."
           git reset -- .github/workflows
           git checkout -- .github/workflows
-          # If merging fails, perform the merge on your local machine with this sequence of commands:
-          # [if you've never done it before] git remote add upstream "https://github.com/BrownCLPS/LingView.git"
-          # git pull
-          # git fetch upstream
-          # git merge --no-ff -Xtheirs upstream/master
-          # git reset -- data
-          # git checkout -- data
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v2
         with:
@@ -78,7 +71,7 @@ jobs:
             > 
             > When you review this, please make sure that I didn't accidentally undo any of your LingView customizations (e.g. if your `index.html` or `jsx/App/AboutPage.jsx` is different from the version at ${{ env.upstream }})!
             > 
-            > Please also check for merge conflicts (indicated by `>>>`, `===`, and `<<<` on the files changed tab). If you find any, make sure you fix them before merging this pull request. To fix anything in this pull request, just push additional commits to the ${{ env.pr_branch }} branch.
+            > Please also check for merge conflicts (indicated by `>>>`, `===`, and `<<<` on the files changed tab). If you find any, fix them before merging this pull request. To fix anything in this pull request, just push additional commits to the ${{ env.pr_branch }} branch.
             >
             > I ignored any changes made to the `.github/workflows` folder because, since I'm just a bot, I'm not allowed to change those files. You can update your workflow files by replacing them with the version at ${{ env.upstream }}/${{ env.upstream_branch }}.
             
