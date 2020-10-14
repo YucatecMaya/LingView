@@ -16,7 +16,7 @@ class tierRegistry {
     /*
     // English UI text:
       switch(type) {
-          case "txt": return "morpheme (text)";
+          case "txt": return "morpheme (as in the text)";
           case "cf": return "morpheme (citation form)";
           case "gls": return "morpheme gloss"
           case "msa": return "part of speech";
@@ -27,17 +27,17 @@ class tierRegistry {
     // Spanish UI text:
     switch (type) {
       case "txt":
-        return "Morfema (texto)";
+        return "morfema (como en el texto)";
       case "cf":
-        return "Morfema (forma típico)";
+        return "morfema (forma típica)";
       case "gls":
-        return "Glosa de morfema";
+        return "glosa de morfema";
       case "msa":
-        return "Parte del habla";
+        return "parte del habla";
       case "words":
-        return "Palabra";
+        return "palabra";
       case "free":
-        return "Frase";
+        return "frase";
       default:
         return type;
     }
@@ -59,9 +59,9 @@ class tierRegistry {
     switch (lang) {
         // case "flex-language-name-here": return "desired-decoded-name-here";
       case "con-Latn-EC":
-        return "A'ingae (Borman)";
+        return "A'ingae (ortografía Borman)";
       case "con-Latn-EC-x-dureno":
-        return "A'ingae (Dureno)";
+        return "A'ingae (ortografía nueva)";
       case "defaultLang":
         return "defaultLang";
 
@@ -102,7 +102,7 @@ class tierRegistry {
     */
 
     // Spanish UI text:
-    return tierRegistry.decodeType(type) + " " + this.decodeLang(lang).toLowerCase();
+    return tierRegistry.decodeType(type) + " en " + this.decodeLang(lang);
   }
 
   getTiersJson() {
