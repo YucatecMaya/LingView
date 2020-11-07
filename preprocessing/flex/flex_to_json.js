@@ -9,6 +9,7 @@ const speakerRegistry = require('../speaker_registry').speakerRegistry;
 const tierRegistry = require('./tier_registry').tierRegistry;
 const mediaFinder = require('../find_media');
 const flexReader = require('./read_flex');
+const getTierName = require('./flex_tier_names.js').getTierName;
 
 // punct - a string
 // return a boolean indicating whether 'punct' should typically appear 
@@ -30,18 +31,24 @@ function isSeparator(char) {
 // this word might come from a different language than what FLEx is trying 
 // to detect in this file, so this word should not be marked as a punctuation. 
 function isPunctuation(word) {
-  if (word.item[0].$.type === "punct")  {
-    const wordElement = word.item[0]._;
-    // The Regex checks if the word contains digits or alpha letters.
-    // This expression also includes special characters, such as accented letters
-    // or other letters not existent in English. 
-    if (wordElement && wordElement.match(/^[0-9a-zA-ZÀ-ÿ]+$/)) {
-      return false; 
-    } else {
-      return true; 
-    }
+  if (flexReader.getWordType(word) === "punct") {
+    const wordValue = flexReader.getWordValue(word);
+    // The Regex checks if the word contains any alphanumeric characters, 
+    // including special alphabetic characters such as accented letters. 
+    return wordValue == null || !wordValue.match(/^[0-9a-zA-ZÀ-ÿ]+$/);
   }
   return false; 
+}
+
+function isIgnored(tierType) {
+  // Omit these tier types from the website, because they're ugly and mostly useless.
+  // See flex_tier_names.js for an explanation of these types
+  return (
+      tierType === "variantTypes" ||
+      tierType === "hn" ||
+      tierType === "glsAppend" ||
+      tierType === "msa"
+  );
 }
 
 // metadata - a metadata object
@@ -131,20 +138,20 @@ function concatWords(sentenceTokens) {
 //   formatted for use by the website
 function getDependentsJson(morphsJson) {
   const dependentsJson = [];
-  for (const tierID in morphsJson) {
-    if (morphsJson.hasOwnProperty(tierID)) {
+  for (const tierName in morphsJson) {
+    if (morphsJson.hasOwnProperty(tierName)) {
       const valuesJson = [];
-      for (const start_slot in morphsJson[tierID]) {
-        if (morphsJson[tierID].hasOwnProperty(start_slot)) {
+      for (const start_slot in morphsJson[tierName]) {
+        if (morphsJson[tierName].hasOwnProperty(start_slot)) {
           valuesJson.push({
             "start_slot": parseInt(start_slot, 10),
-            "end_slot": morphsJson[tierID][start_slot]["end_slot"],
-            "value": morphsJson[tierID][start_slot]["value"]
+            "end_slot": morphsJson[tierName][start_slot]["end_slot"],
+            "value": morphsJson[tierName][start_slot]["value"]
           })
         }
       }
       dependentsJson.push({
-        "tier": tierID,
+        "tier": tierName,
         "values": valuesJson
       });
     }
@@ -171,17 +178,21 @@ function repackageMorphs(morphs, tierReg, startSlot) {
   const morphTokens = {};
   let slotNum = startSlot;
   for (const morph of morphs) {
-    for (const tier of flexReader.getMorphTiers(morph)) {
-      const tierID = tierReg.maybeRegisterTier(tier.$.lang, tier.$.type, true);
-      if (tierID != null) {
-        if (!morphTokens.hasOwnProperty(tierID)) {
-          morphTokens[tierID] = {};
+    for (const tier of flexReader.getTiers(morph)) {
+      const tierType = flexReader.getTierType(tier);
+      if (!isIgnored(tierType)) {
+        const tierName = getTierName(flexReader.getTierLang(tier), tierType);
+        tierReg.registerTier(tierName, true);
+        if (tierName != null) {
+          if (!morphTokens.hasOwnProperty(tierName)) {
+            morphTokens[tierName] = {};
+          }
+          morphTokens[tierName][slotNum] = {
+            "value": flexReader.getTierValue(tier),
+            "tier type": flexReader.getTierType(tier),
+            "part of speech": flexReader.getMorphPartOfSpeech(morph),
+          };
         }
-        morphTokens[tierID][slotNum] = {
-          "value": flexReader.getMorphTierValue(tier),
-          "tier type": tier.$.type,
-          "part of speech": flexReader.getMorphPartOfSpeech(morph),
-        };
       }
     }
     slotNum++;
@@ -189,13 +200,13 @@ function repackageMorphs(morphs, tierReg, startSlot) {
 
   // Concatenating step:
   let morphsJson = {};
-  for (const tierID in morphTokens) {
-    if (morphTokens.hasOwnProperty(tierID)) {
-      if (!morphsJson.hasOwnProperty(tierID)) {
-        morphsJson[tierID] = {};
+  for (const tierName in morphTokens) {
+    if (morphTokens.hasOwnProperty(tierName)) {
+      if (!morphsJson.hasOwnProperty(tierName)) {
+        morphsJson[tierName] = {};
       }
-      morphsJson[tierID][startSlot] = {
-        "value": concatMorphs(morphTokens[tierID], startSlot, slotNum),
+      morphsJson[tierName][startSlot] = {
+        "value": concatMorphs(morphTokens[tierName], startSlot, slotNum),
         "end_slot": slotNum
       };
     }
@@ -232,12 +243,13 @@ function repackageFreeGlosses(freeGlosses, tierReg, endSlot) {
   const glossStartSlot = 0;
   const morphsJson = {};
   for (const gloss of freeGlosses) {
-    const tierID = tierReg.maybeRegisterTier(gloss.$.lang, "free", false);
-    if (tierID != null) {
-      if (!morphsJson.hasOwnProperty(tierID)) {
-        morphsJson[tierID] = {};
+    const tierName = getTierName(flexReader.getFreeGlossLang(gloss), "free");
+    tierReg.registerTier(tierName, false);
+    if (tierName != null) {
+      if (!morphsJson.hasOwnProperty(tierName)) {
+        morphsJson[tierName] = {};
       }
-      morphsJson[tierID][glossStartSlot] = {
+      morphsJson[tierName][glossStartSlot] = {
         "value": flexReader.getFreeGlossValue(gloss),
         "end_slot": endSlot
       };
@@ -255,7 +267,7 @@ function repackageFreeGlosses(freeGlosses, tierReg, endSlot) {
 // returns an object describing the sentence, 
 //   structured correctly for use by the website
 function getSentenceJson(sentence, speakerReg, tierReg, wordsTierID, hasTimestamps) {
-  const morphsJson = {}; // tierID -> start_slot -> {"value": value, "end_slot": end_slot}
+  const morphsJson = {}; // tierName -> start_slot -> {"value": value, "end_slot": end_slot}
   morphsJson[wordsTierID] = {}; // FIXME words tier will show up even when the sentence is empty of words
 
   let slotNum = 0;
@@ -317,17 +329,15 @@ function getSentenceJson(sentence, speakerReg, tierReg, wordsTierID, hasTimestam
 // jsonIn - the JSON parse of the FLEx interlinear-text
 // jsonFilesDir - the directory for the output file describing this interlinear text
 // fileName - the path to the FLEx file
-// isoDict - an object correlating languages with ISO codes
 // callback - the function that will execute when the preprocessText function completes
 // updates the index and story files for this interlinear text, 
 //   then executes the callback
-function preprocessText(jsonIn, jsonFilesDir, fileName, isoDict, callback) {
-  let storyID = jsonIn.$.guid;
+function preprocessText(jsonIn, jsonFilesDir, fileName, callback) {
+  let storyID = flexReader.getDocumentID(jsonIn);
   
   let metadata = mediaFinder.improveFLExIndexData(fileName, storyID, jsonIn);
   const speakerReg = new speakerRegistry();
   metadata['speakers'] = speakerReg.getSpeakersList();
-  // updateIndex(metadata, "data/index.json", storyID);
 
   const jsonOut = {
     "metadata": metadata,
@@ -335,14 +345,15 @@ function preprocessText(jsonIn, jsonFilesDir, fileName, isoDict, callback) {
   };
 
   let textLang = flexReader.getDocumentSourceLang(jsonIn);
-  const tierReg = new tierRegistry(isoDict);
-  const wordsTierID = tierReg.maybeRegisterTier(textLang, "words", true);
+  const tierReg = new tierRegistry();
+  const wordsTierName = getTierName(textLang, "words");
+  tierReg.registerTier(wordsTierName, true);
 
   const hasTimestamps = flexReader.documentHasTimestamps(jsonIn);
   
   for (const paragraph of flexReader.getDocumentParagraphs(jsonIn)) {
     for (const sentence of flexReader.getParagraphSentences(paragraph)) {
-      jsonOut.sentences.push(getSentenceJson(sentence, speakerReg, tierReg, wordsTierID, hasTimestamps));
+      jsonOut.sentences.push(getSentenceJson(sentence, speakerReg, tierReg, wordsTierName, hasTimestamps));
     }
   }
 
@@ -368,30 +379,27 @@ function preprocessText(jsonIn, jsonFilesDir, fileName, isoDict, callback) {
 
 // xmlFilesDir - a directory containing zero or more FLEx files
 // jsonFilesDir - a directory for output files describing individual interlinear texts
-// isoFileName - the file address of a JSON object matching languages to their ISO codes
-// callback - the function that will execute when the preprocess_dir function completes
-// updates the index and story files for each interlinear text, 
-//   then executes the callback
-function preprocess_dir(xmlFilesDir, jsonFilesDir, isoFileName, callback) {
-  let isoDict = {};
-  try {
-    isoDict = JSON.parse(fs.readFileSync(isoFileName));
-  } catch (err) {
-    console.log("Unable to read ISO codes file. Error was " + err + " Proceeding anyway...");
-  }
-
+// callback - the function that will execute when the preprocess_dir function completes.
+//   The callback function should take a list of story IDs as argument. 
+// Updates the index and story files for each interlinear text, 
+//   then executes the callback, passing the list of all story IDs that were processed
+//   as an argument to the callback function. 
+function preprocessDir(xmlFilesDir, jsonFilesDir, callback) {
   const xmlFileNames = fs.readdirSync(xmlFilesDir).filter(f => f[0] !== '.'); // excludes hidden files
 
   // use this to wait for all preprocess calls to terminate before executing the callback
-  const status = {numJobs: xmlFileNames.length};
+  const status = {
+    numJobs: xmlFileNames.length,
+    storyIDs: [],
+  };
   if (xmlFileNames.length === 0) {
-    callback();
+    callback(status.storyIDs);
   }
 
   const whenDone = function () {
     status.numJobs--;
     if (status.numJobs <= 0) {
-      callback();
+      callback(status.storyIDs);
     }
   };
 
@@ -415,7 +423,8 @@ function preprocess_dir(xmlFilesDir, jsonFilesDir, isoFileName, callback) {
         };
         
         for (const text of texts) {
-          preprocessText(text, jsonFilesDir, xmlFileName, isoDict, singleTextCallback);
+          status.storyIDs.push(flexReader.getDocumentID(text));
+          preprocessText(text, jsonFilesDir, xmlFileName, singleTextCallback);
         }
       });
     });
@@ -423,5 +432,5 @@ function preprocess_dir(xmlFilesDir, jsonFilesDir, isoFileName, callback) {
 }
 
 module.exports = {
-  preprocess_dir: preprocess_dir
+  preprocessDir: preprocessDir
 };
