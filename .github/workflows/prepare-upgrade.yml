@@ -59,7 +59,7 @@ jobs:
           git reset -- .github/workflows
           git checkout -- .github/workflows
           # warn about any remaining unresolved merge conflicts
-          (test $(git status | grep -c CONFLICT) -lt 1 &&\
+          (test $(git status | grep -c unmerged) -lt 1 &&\
           echo conflicts_message="" >> $GITHUB_ENV) || \
           echo conflicts_message="IMPORTANT: There are unresolved merge conflicts. Before merging this pull request, resolve them by making additional commits to the ${{ env.pr_branch }} branch." >> $GITHUB_ENV
       - name: Create Pull Request
