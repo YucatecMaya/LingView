@@ -266,13 +266,12 @@ function repackageFreeGlosses(freeGlosses, tierReg, endSlot) {
 // hasTimestamps - whether the FLEx file contains a start and end value for each sentence
 // returns an object describing the sentence, 
 //   structured correctly for use by the website
-function getSentenceJson(sentence, speakerReg, tierReg, wordsTierID, hasTimestamps, sentenceCounter) {
+function getSentenceJson(sentence, speakerReg, tierReg, wordsTierID, hasTimestamps) {
   const morphsJson = {}; // tierName -> start_slot -> {"value": value, "end_slot": end_slot}
   morphsJson[wordsTierID] = {}; // FIXME words tier will show up even when the sentence is empty of words
 
   let slotNum = 0;
   const sentenceTokens = []; // for building the free transcription
-
   for (const word of flexReader.getSentenceWords(sentence)) {
     const wordStartSlot = slotNum;
 
@@ -316,11 +315,6 @@ function getSentenceJson(sentence, speakerReg, tierReg, wordsTierID, hasTimestam
   if (hasTimestamps) {
     sentenceJson.start_time_ms = flexReader.getSentenceStartTime(sentence);
     sentenceJson.end_time_ms = flexReader.getSentenceEndTime(sentence);
-  } else {
-    // For Untimed files, we need to assign a sentence id to each sentence,
-    // which is a counter starting from 1 and labels each sentence
-    // with the count of sentences in the file.
-    sentenceJson.sentence_id = sentenceCounter;
   }
   
   let speaker = flexReader.getSentenceSpeaker(sentence);
@@ -356,15 +350,10 @@ function preprocessText(jsonIn, jsonFilesDir, fileName, callback) {
   tierReg.registerTier(wordsTierName, true);
 
   const hasTimestamps = flexReader.documentHasTimestamps(jsonIn);
-
-  // This is the counter for number of sentences in a file.
-  // This counter will be used as sentence_id for Untimed files.
-  let sentenceCounter = 1; 
   
   for (const paragraph of flexReader.getDocumentParagraphs(jsonIn)) {
     for (const sentence of flexReader.getParagraphSentences(paragraph)) {
-      jsonOut.sentences.push(getSentenceJson(sentence, speakerReg, tierReg, wordsTierName, hasTimestamps, sentenceCounter));
-      sentenceCounter += 1; 
+      jsonOut.sentences.push(getSentenceJson(sentence, speakerReg, tierReg, wordsTierName, hasTimestamps));
     }
   }
 
@@ -375,7 +364,6 @@ function preprocessText(jsonIn, jsonFilesDir, fileName, callback) {
   jsonOut.metadata['speaker IDs'] = speakerReg.getSpeakersJson();
 
   const prettyString = JSON.stringify(jsonOut, null, 2);
-
   const jsonPath = jsonFilesDir + storyID + ".json";
   fs.writeFile(jsonPath, prettyString, function (err) {
     if (err) {
