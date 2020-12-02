@@ -52,6 +52,17 @@ jobs:
           git reset -- build # build is gitignored, but sometimes causes merge conflicts anyway *shrug*
           git reset -- data
           git checkout -- data
+          # revert any updates to translated text (in LocaleConstants, LocaleSelect, About, Glossary, and Landing files)
+          git reset -- jsx/App/locale/LocaleConstants.jsx
+          git reset -- jsx/App/locale/LocaleSelect.jsx
+          git reset -- jsx/App/AboutPage.jsx
+          git reset -- jsx/App/GlossaryPage.jsx
+          git reset -- jsx/App/LandingPage.jsx
+          git checkout -- jsx/App/locale/LocaleConstants.jsx
+          git checkout -- jsx/App/locale/LocaleSelect.jsx
+          git checkout -- jsx/App/AboutPage.jsx
+          git checkout -- jsx/App/GlossaryPage.jsx
+          git checkout -- jsx/App/LandingPage.jsx
           # warn about any workflow changes, then discard them
           (test $(git status | grep -c workflows) -lt 1 && \
           echo workflows_message="" >> $GITHUB_ENV) || \
