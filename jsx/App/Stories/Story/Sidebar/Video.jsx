@@ -17,11 +17,13 @@ export class Video extends React.Component {
 		$('#centerPanel').css('height', bodyHeight);
 		$("#centerPanel").css("width", "60%");
 
-		// Deactivate audio:
-		$('#footer').css('display', 'none');
-		$('#audio').removeAttr('ontimeupdate');
-		$('#audio').removeAttr('onclick');
-		$('#audio').attr('data-live', 'false');
+		// Deactivate audio (only if the audio footer exists)
+		if ($('#footer').length) {
+			$('#footer').css('display', 'none');
+			$('#audio').removeAttr('ontimeupdate');
+			$('#audio').removeAttr('onclick');
+			$('#audio').attr('data-live', 'false');
+		}
 
 		// Activate video:
 		$('#video').css('display', 'block'); // switched from 'inline' because it seemed unnecessary and allowed for flickering scrollbar glitch
@@ -33,12 +35,14 @@ export class Video extends React.Component {
 		var audio = document.getElementById('audio');
 		var video = document.getElementById('video');
 
-		if (!audio.paused) {
-			audio.pause();
-			video.play();
+		if (audio) {
+			if (!audio.paused) {
+				audio.pause();
+				video.play();
+			}
+			video.currentTime = audio.currentTime;
 		}
-
-		video.currentTime = audio.currentTime;
+		
 	}
 
 	static hide() {
@@ -58,19 +62,26 @@ export class Video extends React.Component {
 		$("#video").removeAttr("ontimeupdate");
 		$("#video").attr("data-live", "false");
 
-		// Activate audio:
-		$("#footer").css("display", "block");
-		$("#audio").attr("data-live", "true");
-		$("#audio").attr("ontimeupdate", "sync(this.currentTime)");
-		$("#audio").attr("onclick", "sync(this.currentTime)");
+		// Activate audio (only if the audio footer exists)
+		if ($('#footer').length) {
+			$("#footer").css("display", "block");
+			$("#audio").attr("data-live", "true");
+			$("#audio").attr("ontimeupdate", "sync(this.currentTime)");
+			$("#audio").attr("onclick", "sync(this.currentTime)");
+		}
 
 		// Match times:
 		var audio = document.getElementById("audio");
 		var video = document.getElementById("video");
-		if (!video.paused) {
-			video.pause();
-			audio.play();
+
+		if (audio) {
+			if (!video.paused) {
+				video.pause();
+				audio.play();
+			}
+			audio.currentTime = video.currentTime;
 		}
-		audio.currentTime = video.currentTime;
+		
+		
 	}
 }
