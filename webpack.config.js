@@ -56,5 +56,6 @@ module.exports = {
       $: 'jquery',
       jQuery: 'jquery'
     })
-  ]
+  ],
+	stats: 'errors-only'
 };
