@@ -3,6 +3,11 @@ const fs = require('fs');
 const syncUrlExists = require('sync-rpc')(require.resolve('./url_exists'));
 const readFlex = require('./flex/read_flex.js'); // TODO use me more, and use read_eaf.js too, for stylistic consistency
 
+const TARGET_MEDIA_FILE_EXTENSIONS = {
+  audio: new Set(['.mp3', '.wav']),
+  video: new Set(['.mp4', '.youtube']),
+};
+
 function getMetadataFromIndex(filename) {
   // I/P: filename, an XML or EAF file
   // O/P: a JSON object with metadata for the given file;
@@ -20,7 +25,7 @@ function getFilenameFromPath(path) {
   // I/P: path, a string
   // O/P: the filename which occurs at the end of the path
   // Status: untested
-  const begin = path.lastIndexOf("/") + 1; // @Kalinda, this might fail on windows.
+  const begin = path.lastIndexOf("/") + 1;
   return path.substring(begin, path.length);
 }
 
@@ -37,11 +42,23 @@ function getFlexMediaFilenames(itext) {
 }
 
 function verifyMedia(filename) {
-  // I/P: filename, a .mp3 or .mp4 file
+  // I/P: filename, a .mp3, .mp4, or .youtube file
   // O/P: boolean, whether or not file exists in media_files directory
-  // Status: untested
-  const media_files = fs.readdirSync("data/media_files");
-  return (media_files.indexOf(filename) >= 0);
+
+  // If the "filename" is actually a name of a file, it must end in
+  // an extension name that is part of the all valid video file extensions.
+  // In this case, check if there exists a file with that name. 
+  const fileExtension = '.' + filename.split('.').pop();
+  if (TARGET_MEDIA_FILE_EXTENSIONS.video.has(fileExtension) 
+  || TARGET_MEDIA_FILE_EXTENSIONS.audio.has(fileExtension)) {
+    const media_files = fs.readdirSync("data/media_files");
+    return (media_files.indexOf(filename) >= 0);
+  } else if (filename.slice(4) === "http") {
+    // Else if the "filename" as stored in the metadata is actually an URL.
+    // Return true in this case, assuming the URL is a valid from Youtube.
+    return true; 
+  }
+  return false; 
 }
 
 function findValidMedia(filenames) {
@@ -55,51 +72,51 @@ function findValidMedia(filenames) {
   return null;
 }
 
+// Check if a video file's path ends in the ".youtube" extension. 
+function isVideoFilepathYoutubeExtension(videoFile) {
+  return videoFile.endsWith(".youtube");
+}
+
 function mediaSearch(filename, mediaType, mediaFiles, extensions) {
   // I/P: filename, the name of the ELAN or FLEx file
   // I/P: mediaType, which is either "video" or "audio", for printing to the command line
   // I/P: mediaFiles, a list of the media files that were linked in the ELAN or FLEx file
   // I/P: extensions, file extensions for media files, including the leading period (some iterable type, e.g. array or set)
   // O/P: the filename of the first valid media that was found, or null if none exists
-  console.log("🚨  WARN: " + filename + " is missing correctly linked " + mediaType + ". Attemping to find link...");
+  
+  process.stdout.write(filename + " is missing " + mediaType + "... "); // no newline
+  
   const shortFilename = filename.substring(0, filename.lastIndexOf('.'));
   const shortestFilename = filename.substring(0, filename.indexOf('.')); // more possible matches for .postflex.flextext files
-  const filenamesToTry = mediaFiles;
+
+  const filenamesToTryRaw = mediaFiles;
   for (const extension of extensions) {
-    filenamesToTry.push(shortFilename + extension);
-    filenamesToTry.push(shortestFilename + extension);
+    filenamesToTryRaw.push(shortFilename + extension);
+    filenamesToTryRaw.push(shortestFilename + extension);
   }
+  const filenamesToTry = [...new Set(filenamesToTryRaw)]; // remove duplicates
   
   let mediaFile = findValidMedia(filenamesToTry);
-  if (mediaFile != null) {
-    console.log("🔍  SUCCESS: Found matching " + mediaType + ": " + mediaFile);
-  } else if (process.env.MISSING_MEDIA === 'ignore' || process.env.MISSING_MEDIA === 'link') {
-    console.log("🥽 Attempting to locate media in remote storage...");
+  
+  if (mediaFile == null && process.env.MISSING_MEDIA != null) {
+    process.stdout.write("Looking in remote storage..."); // no newline
 
-    let remoteMedia, erred = false;
-    try {
-      remoteMedia = remoteMediaSearch(filenamesToTry);
-    } catch (err) {
-      console.log('Error while trying to locate media in remote storage:', err);
-      erred = true;
-    }
-
-    if (erred || remoteMedia.filename == null) {
-      console.log("👎 Failed to find requested media in remote storage for any of:", filenamesToTry);
-    } else if (process.env.MISSING_MEDIA === 'ignore') {
-      console.log("🥽 FOUND! Adding to list of required media.");
+    let remoteMedia = remoteMediaSearch(filenamesToTry);
+    
+    if (process.env.MISSING_MEDIA === 'ignore') {
       mediaFile = remoteMedia.filename;
       if (global.missingMediaFiles) global.missingMediaFiles.push(`${remoteMedia.filename} (at ${remoteMedia.remoteUrl})`);
     } else if (process.env.MISSING_MEDIA === 'link') {
-      console.log("🥽 FOUND! Linking to remote url...");
       mediaFile = remoteMedia.remoteUrl;
+    } else {
+      console.warn(`Error during remote media search: Unsupported value ${process.env.MISSING_MEDIA} for MISSING_MEDIA env variable.`);
     }
-  } else if (typeof process.env.MISSING_MEDIA !== 'undefined') {
-    console.log("⚠ Unsupported value", process.env.MISSING_MEDIA, "for MISSING_MEDIA env variable.");
   }
 
-  if (mediaFile == null) {
-    console.log("❌  ERROR: Cannot find matching " + mediaType + " for " + shortFilename + ". ");
+  if (mediaFile != null) {
+    console.log("🥽 FOUND!");
+  } else {
+    console.log("❌ Not found.");
     if (global.missingMediaFiles) global.missingMediaFiles.push(filenamesToTry);
   }
   return mediaFile;
@@ -107,31 +124,25 @@ function mediaSearch(filename, mediaType, mediaFiles, extensions) {
 
 function remoteMediaSearch(filenamesToTry) {
   if (!process.env.REMOTE_MEDIA_PATH || typeof process.env.REMOTE_MEDIA_PATH !== "string") {
-    throw new Error(`Unsupported value ${process.env.REMOTE_MEDIA_PATH} for REMOTE_MEDIA_PATH env variable.`);
-  }
-
-  for (const filename of filenamesToTry) {
-    const remoteUrl = `${process.env.REMOTE_MEDIA_PATH.replace(/\/$/, '')}/${filename}`;
-    let remoteUrlHeadSuccess;
-    try {
-      remoteUrlHeadSuccess = syncUrlExists(remoteUrl);
-    } catch (err) {
-      console.log(err);
-      continue;
+    console.warn(`Error while trying to locate media in remote storage: Unsupported value ${process.env.REMOTE_MEDIA_PATH} for REMOTE_MEDIA_PATH env variable.`);
+  } else {
+    for (const filename of filenamesToTry) {
+      const remoteUrl = `${process.env.REMOTE_MEDIA_PATH.replace(/\/$/, '')}/${filename}`;
+      let remoteUrlHeadSuccess;
+      try {
+        remoteUrlHeadSuccess = syncUrlExists(remoteUrl);
+      } catch (err) {
+        console.warn(err);
+        continue;
+      }
+      if (remoteUrlHeadSuccess) {
+        return { filename, remoteUrl };
+      }
     }
-    if (remoteUrlHeadSuccess) {
-      console.log('🔍 Found!', remoteUrl);
-      return { filename, remoteUrl };
-    }
   }
-  console.log('❌ Could not find remotely!');
   return { filename: null, remoteUrl: null };
 }
 
-const TARGET_MEDIA_FILE_EXTENSIONS = {
-  audio: new Set(['.mp3', '.wav']),
-  video: new Set(['.mp4']),
-};
 function updateMediaMetadata(filename, storyID, metadata, linkedMediaPaths) {
   // Only call this function if the file contains timestamps.
   // I/P: filename, of the FLEx or ELAN file
@@ -152,6 +163,13 @@ function updateMediaMetadata(filename, storyID, metadata, linkedMediaPaths) {
   let hasWorkingVideo = verifyMedia(videoFile);
   if (!hasWorkingVideo) {
     metadata['media']['video'] = "";
+  } else {
+    // If the video file has ".youtube" extension,
+    // change the content of the 'video' tag to the actual Youtube URL.
+    if (isVideoFilepathYoutubeExtension(videoFile)) {
+      const videoFileContent = fs.readFileSync("./data/media_files/" + videoFile, 'utf8');
+      metadata['media']['video'] = videoFileContent;
+    }
   }
 
   // If both audio/video work, then we're done. Otherwise, figure out what we need.
@@ -183,13 +201,18 @@ function updateMediaMetadata(filename, storyID, metadata, linkedMediaPaths) {
     if (videoFile != null) {
       hasWorkingVideo = true;
       metadata['media']['video'] = videoFile;
+      // If the video file has ".youtube" extension,
+      // change the content of the 'video' tag to the actual Youtube URL.
+      if (isVideoFilepathYoutubeExtension(videoFile)) {
+        const videoFileContent = fs.readFileSync("./data/media_files/" + videoFile, 'utf8');
+        metadata['media']['video'] = videoFileContent;
+      }
     }
   }
   
   // Worst case scenario: no media
   if (!hasWorkingAudio && !hasWorkingVideo) {
     metadata['timed'] = false;
-    console.log("❌  ERROR: " + filename + " (unique ID: " + storyID + ") has no linked audio or video in the media_files directory. It will be processed as an untimed file and no audio, video, or time alignment will be displayed on the site.");
   }
 }
 
@@ -197,7 +220,7 @@ function getTitleFromFilename(filename) {
   return filename.substring(0, filename.lastIndexOf('.'));
 }
 
-function improveFLExIndexData(path, storyID, itext) {
+module.exports.improveFLExIndexData = function improveFLExIndexData(path, storyID, itext) {
   // I/P: path, a string
   //      itext, an interlinear text, e.g., jsonIn["document"]["interlinear-text"][0]
   // O/P: a JSON object, based on the index.json file and new metadata
@@ -226,7 +249,6 @@ function improveFLExIndexData(path, storyID, itext) {
   if (metadata == null) { // file not in index previously
   
     let defaultTitle = getTitleFromFilename(getFilenameFromPath(path));
-    // console.log(32332, path, defaultTitle);
     // Uncomment the three lines below to use a particular language title 
     // (in this case "es", Spanish) as the main title for newly added documents. 
     // if (titles["es"] != null && titles["es"] != "") {
@@ -287,7 +309,7 @@ function improveFLExIndexData(path, storyID, itext) {
   return metadata;
 }
 
-function improveElanIndexData(path, storyID, adoc) {
+module.exports.improveElanIndexData = function improveElanIndexData(path, storyID, adoc) {
   // I/P: path, a string
   //      storyID, a string
   //      adoc, an annotation document
@@ -349,11 +371,3 @@ function improveElanIndexData(path, storyID, adoc) {
 
   return metadata;
 }
-
-module.exports = {
-  verifyMedia: verifyMedia,
-  getMetadataFromIndex: getMetadataFromIndex,
-  getFilenameFromPath: getFilenameFromPath,
-  improveFLExIndexData: improveFLExIndexData,
-  improveElanIndexData: improveElanIndexData
-};

@@ -485,20 +485,21 @@ function preprocessDir(eafFilesDir, jsonFilesDir, callback) {
   const status = {
     numJobs: eafFileNames.length,
     storyIDs: [],
+    storyID2Name: {}
   };
   if (eafFileNames.length === 0) {
-    callback(status.storyIDs);
+    callback(status);
   }
 
   const whenDone = function () {
     status.numJobs--;
     if (status.numJobs <= 0) {
-      callback(status.storyIDs);
+      callback(status);
     }
   };
 
+
   for (const eafFileName of eafFileNames) {
-    console.log("Processing " + eafFileName);
     const eafPath = eafFilesDir + eafFileName;
     
     // parse .pfsx file, if found
@@ -520,11 +521,15 @@ function preprocessDir(eafFilesDir, jsonFilesDir, callback) {
       parseXml(xmlData, function (err2, jsonData) {
         if (err2) throw err2;
         const adoc = jsonData.ANNOTATION_DOCUMENT;
-        status.storyIDs.push(elanReader.getDocID(adoc));
+        const storyID = elanReader.getDocID(adoc)
+        status.storyIDs.push(storyID);
+        status.storyID2Name[storyID] = eafFileName;
         preprocess(adoc, pfsxJson, jsonFilesDir, eafFileName, whenDone);
       });
     });
+
   }
+
 }
 
 module.exports = {
