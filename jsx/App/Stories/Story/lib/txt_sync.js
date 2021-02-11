@@ -1,9 +1,13 @@
 // Based on http://community.village.virginia.edu/etst/
 
+
+let player; 
+
 export function setupTextSync() {
 
     // "media" is undefined if there are no AV files associated with the current text. 
     const media = document.querySelectorAll("[data-live='true']")[0];
+    
     let ts_tag_array = []; // Array that stores all timestamps/sentence id
     let ts_start_time_array = [];
     let ts_stop_time_array = [];
@@ -34,7 +38,7 @@ export function setupTextSync() {
     }
 
     /* Sync function for files with AV */
-    window.sync = function sync(current_time) {
+    function sync(current_time) {
         for (var i=0; i<ts_tag_array.length; i++) {
             // Somewhat hacky solution: decrease current_time by 0.001 to avoid highlighting before player starts
             if ((current_time-0.001 >= parseFloat(ts_start_time_array[i])/1000.0) && (current_time <= parseFloat(ts_stop_time_array[i])/1000.0)) {
@@ -49,6 +53,8 @@ export function setupTextSync() {
             }
         }
     }
+
+    window.sync = sync;
 
     /* Two functions that highlights/unhighlights a sentence. */
     function highlightSentence(timestampIndex) {
@@ -90,11 +96,19 @@ export function setupTextSync() {
     // Status: untested
     // This function adjusts the AV file(s)' timestamp according to the 
     // selected sentence's URL
-    function setMediaCurrentTime(t) {
-        const media = $("[data-live='true']").get(0);
-        if (media) {
-            media.currentTime = (t + 2) / 1000;
+    function setMediaCurrentTime(timestampMilliseconds) {
+        const youtubeVideo = $("[is-youtube='true']").get(0);
+        if (youtubeVideo) {
+            // The timestamp unit on Youtube videos is seconds,
+            // so need to divide t, which is in ms, by 1000.
+            player.seekTo(timestampMilliseconds / 1000);
+        } else {
+            const media = $("[data-live='true']").get(0);
+            if (media) {
+                media.currentTime = (timestampMilliseconds + 2) / 1000;
+            } 
         }
+        
     }
 
     /* Updates the URL according to a sentence's index id. */
@@ -134,4 +148,32 @@ export function setupTextSync() {
         }
     });
   
+}
+
+
+export function setupYoutube() {
+
+    const youtubeMedia = document.querySelectorAll("[is-youtube='true']")[0];
+    if (!youtubeMedia) {
+        return; 
+    }
+
+    const youtubeID = youtubeMedia.getAttribute('youtube-id');
+
+    // Initialize YouTube player: 
+    window.YT.ready(function() {
+        player = new window.YT.Player("video", {
+            height: "270",
+            width: "480",
+            videoId: youtubeID
+        });
+    });
+
+    // Call the sync function on the Youtube video every 0.1 second.
+    // This ensures that the corresponding text is highlighted when
+    // the text's timestamp matches the video's timestamp. 
+    setInterval(function(){
+        const currentTime = player.playerInfo.currentTime;
+        sync(currentTime);
+      }, 100);
 }

@@ -3,6 +3,11 @@ const fs = require('fs');
 const syncUrlExists = require('sync-rpc')(require.resolve('./url_exists'));
 const readFlex = require('./flex/read_flex.js'); // TODO use me more, and use read_eaf.js too, for stylistic consistency
 
+const TARGET_MEDIA_FILE_EXTENSIONS = {
+  audio: new Set(['.mp3', '.wav']),
+  video: new Set(['.mp4', '.youtube']),
+};
+
 function getMetadataFromIndex(filename) {
   // I/P: filename, an XML or EAF file
   // O/P: a JSON object with metadata for the given file;
@@ -37,11 +42,23 @@ function getFlexMediaFilenames(itext) {
 }
 
 function verifyMedia(filename) {
-  // I/P: filename, a .mp3 or .mp4 file
+  // I/P: filename, a .mp3, .mp4, or .youtube file
   // O/P: boolean, whether or not file exists in media_files directory
-  // Status: untested
-  const media_files = fs.readdirSync("data/media_files");
-  return (media_files.indexOf(filename) >= 0);
+
+  // If the "filename" is actually a name of a file, it must end in
+  // an extension name that is part of the all valid video file extensions.
+  // In this case, check if there exists a file with that name. 
+  const fileExtension = '.' + filename.split('.').pop();
+  if (TARGET_MEDIA_FILE_EXTENSIONS.video.has(fileExtension) 
+  || TARGET_MEDIA_FILE_EXTENSIONS.audio.has(fileExtension)) {
+    const media_files = fs.readdirSync("data/media_files");
+    return (media_files.indexOf(filename) >= 0);
+  } else if (filename.slice(4) === "http") {
+    // Else if the "filename" as stored in the metadata is actually an URL.
+    // Return true in this case, assuming the URL is a valid from Youtube.
+    return true; 
+  }
+  return false; 
 }
 
 function findValidMedia(filenames) {
@@ -55,6 +72,11 @@ function findValidMedia(filenames) {
   return null;
 }
 
+// Check if a video file's path ends in the ".youtube" extension. 
+function isVideoFilepathYoutubeExtension(videoFile) {
+  return videoFile.endsWith(".youtube");
+}
+
 function mediaSearch(filename, mediaType, mediaFiles, extensions) {
   // I/P: filename, the name of the ELAN or FLEx file
   // I/P: mediaType, which is either "video" or "audio", for printing to the command line
@@ -66,6 +88,7 @@ function mediaSearch(filename, mediaType, mediaFiles, extensions) {
   
   const shortFilename = filename.substring(0, filename.lastIndexOf('.'));
   const shortestFilename = filename.substring(0, filename.indexOf('.')); // more possible matches for .postflex.flextext files
+
   const filenamesToTryRaw = mediaFiles;
   for (const extension of extensions) {
     filenamesToTryRaw.push(shortFilename + extension);
@@ -74,6 +97,7 @@ function mediaSearch(filename, mediaType, mediaFiles, extensions) {
   const filenamesToTry = [...new Set(filenamesToTryRaw)]; // remove duplicates
   
   let mediaFile = findValidMedia(filenamesToTry);
+  
   if (mediaFile == null && process.env.MISSING_MEDIA != null) {
     process.stdout.write("Looking in remote storage..."); // no newline
 
@@ -119,10 +143,6 @@ function remoteMediaSearch(filenamesToTry) {
   return { filename: null, remoteUrl: null };
 }
 
-const TARGET_MEDIA_FILE_EXTENSIONS = {
-  audio: new Set(['.mp3', '.wav']),
-  video: new Set(['.mp4']),
-};
 function updateMediaMetadata(filename, storyID, metadata, linkedMediaPaths) {
   // Only call this function if the file contains timestamps.
   // I/P: filename, of the FLEx or ELAN file
@@ -143,6 +163,13 @@ function updateMediaMetadata(filename, storyID, metadata, linkedMediaPaths) {
   let hasWorkingVideo = verifyMedia(videoFile);
   if (!hasWorkingVideo) {
     metadata['media']['video'] = "";
+  } else {
+    // If the video file has ".youtube" extension,
+    // change the content of the 'video' tag to the actual Youtube URL.
+    if (isVideoFilepathYoutubeExtension(videoFile)) {
+      const videoFileContent = fs.readFileSync("./data/media_files/" + videoFile, 'utf8');
+      metadata['media']['video'] = videoFileContent;
+    }
   }
 
   // If both audio/video work, then we're done. Otherwise, figure out what we need.
@@ -174,6 +201,12 @@ function updateMediaMetadata(filename, storyID, metadata, linkedMediaPaths) {
     if (videoFile != null) {
       hasWorkingVideo = true;
       metadata['media']['video'] = videoFile;
+      // If the video file has ".youtube" extension,
+      // change the content of the 'video' tag to the actual Youtube URL.
+      if (isVideoFilepathYoutubeExtension(videoFile)) {
+        const videoFileContent = fs.readFileSync("./data/media_files/" + videoFile, 'utf8');
+        metadata['media']['video'] = videoFileContent;
+      }
     }
   }
   
