@@ -402,21 +402,21 @@ function preprocessDir(xmlFilesDir, jsonFilesDir, callback) {
   // use this to wait for all preprocess calls to terminate before executing the callback
   const status = {
     numJobs: xmlFileNames.length,
-    storyIDs: [],
+    storyIDs: [], 
+    storyID2Name: {}
   };
   if (xmlFileNames.length === 0) {
-    callback(status.storyIDs);
+    callback(status);
   }
 
   const whenDone = function () {
     status.numJobs--;
     if (status.numJobs <= 0) {
-      callback(status.storyIDs);
+      callback(status);
     }
   };
 
   for (const xmlFileName of xmlFileNames) {
-    console.log("Processing " + xmlFileName);
     const xmlPath = xmlFilesDir + xmlFileName;
     fs.readFile(xmlPath, function (err1, xmlData) {
       if (err1) throw err1;
@@ -435,12 +435,15 @@ function preprocessDir(xmlFilesDir, jsonFilesDir, callback) {
         };
         
         for (const text of texts) {
-          status.storyIDs.push(flexReader.getDocumentID(text));
+          const storyID = flexReader.getDocumentID(text)
+          status.storyIDs.push(storyID);
+          status.storyID2Name[storyID] = xmlFileName;
           preprocessText(text, jsonFilesDir, xmlFileName, singleTextCallback);
         }
       });
     });
   }
+
 }
 
 module.exports = {
