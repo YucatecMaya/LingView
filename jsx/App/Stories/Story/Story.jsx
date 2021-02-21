@@ -1,7 +1,7 @@
 import { Sidebar } from './Sidebar/Sidebar.jsx';
 import { CenterPanel } from './Display/CenterPanel.jsx';
 import { Video } from './Sidebar/Video.jsx';
-import { setupTextSync, setupYoutube } from './lib/txt_sync';
+import { setupYoutubeAndTextSync } from './lib/txt_sync';
 import { Loader } from '../Loader.jsx';
 
 export class Story extends React.Component {
@@ -13,9 +13,8 @@ export class Story extends React.Component {
         const storyJSON = await import(`~./data/json_files/${this.props.storyID}.json`);
         this.setState({ story: storyJSON.default });
 
-        setupYoutube();
-        setupTextSync();
-
+        setupYoutubeAndTextSync();
+        
         // If video exists:
         if ($('#video').length !== 0) {
             Video.show();

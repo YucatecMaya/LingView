@@ -1,9 +1,9 @@
 // Based on http://community.village.virginia.edu/etst/
 
+let player; // object for Youtube player
 
-let player; 
-
-export function setupTextSync() {
+/* Sets up syncing between AV file and text scrolling and highlighting. */
+function setupTextSync() {
 
     // "media" is undefined if there are no AV files associated with the current text. 
     const media = document.querySelectorAll("[data-live='true']")[0];
@@ -97,11 +97,11 @@ export function setupTextSync() {
     // This function adjusts the AV file(s)' timestamp according to the 
     // selected sentence's URL
     function setMediaCurrentTime(timestampMilliseconds) {
-        const youtubeVideo = $("[is-youtube='true']").get(0);
-        if (youtubeVideo) {
+        if (getYoutubeMedia()) {
             // The timestamp unit on Youtube videos is seconds,
             // so need to divide t, which is in ms, by 1000.
             player.seekTo(timestampMilliseconds / 1000);
+            player.playVideo();
         } else {
             const media = $("[data-live='true']").get(0);
             if (media) {
@@ -146,20 +146,40 @@ export function setupTextSync() {
                 scrollIntoViewIfNeeded($("#current")[0]);
             } 
         }
+
+        // Call the sync function on the Youtube video every 0.1 second.
+        // This ensures that the corresponding text is highlighted when
+        // the text's timestamp matches the video's timestamp. 
+        if (getYoutubeMedia()) {
+            setInterval(function(){
+                const currentTime = player.playerInfo.currentTime;
+                sync(currentTime);
+            }, 100);
+        }
+        
     });
   
 }
 
-
-export function setupYoutube() {
-
+// Returns the element on the page with the tag "is-youtube=true".
+function getYoutubeMedia() {
     const youtubeMedia = document.querySelectorAll("[is-youtube='true']")[0];
+    return youtubeMedia;
+}
+
+/* First sets up Youtube player and related functionality, if the story has a 
+* Youtube video. When the YT player is ready, or if the story does
+* not require Youtube setup, calls setupTextSync.
+*/
+export function setupYoutubeAndTextSync() {
+    const youtubeMedia = getYoutubeMedia();
     if (!youtubeMedia) {
+        setupTextSync();
         return; 
     }
 
     const youtubeID = youtubeMedia.getAttribute('youtube-id');
-
+    
     // Initialize YouTube player: 
     window.YT.ready(function() {
         player = new window.YT.Player("video", {
@@ -167,13 +187,10 @@ export function setupYoutube() {
             width: "480",
             videoId: youtubeID
         });
+        player.addEventListener('onReady', onPlayerReady);
     });
 
-    // Call the sync function on the Youtube video every 0.1 second.
-    // This ensures that the corresponding text is highlighted when
-    // the text's timestamp matches the video's timestamp. 
-    setInterval(function(){
-        const currentTime = player.playerInfo.currentTime;
-        sync(currentTime);
-      }, 100);
+    function onPlayerReady(event) {
+        setupTextSync();
+    }
 }
